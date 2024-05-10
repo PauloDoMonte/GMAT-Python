@@ -54,7 +54,8 @@ def aptidao(individuo):
 
 	if(v1 < 6317 or v2 < 6317): d_nave = 1e18;v_nave = 1e18
 
-	dr,dv = abs(d_nave-d_det),abs(v_nave-v_det)
+	dr 	= np.sqrt((nx-dx)**2+(ny-dy)**2+(nz-dz)**2)
+	dv 	= np.sqrt((nvx-dvx)**2+(nvy-dvy)**2+(nvz-dvz)**2)
 
 	if(dr < 1): 
 		with open('propulsao1.txt', 'a') as arquivo:  # 'a' para append (adicionar)
@@ -74,8 +75,8 @@ toolbox = base.Toolbox()
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
 creator.create("EstrIndividuo", list, fitness=creator.FitnessMin)
 
-dv = [-2.0,2.] # Range para a variação de velocidade causada pela propulsão
-dt = [1,100000] # Range do tempo que vai acontecer pré e pós propulsões
+dv = [-2.0,5.] # Range para a variação de velocidade causada pela propulsão
+dt = [1,10000] # Range do tempo que vai acontecer pré e pós propulsões
 
 toolbox.register("Genes", individuos, intervalos=[dv,dv,dv,dt,dt])
 toolbox.register("Individuos", tools.initIterate, creator.EstrIndividuo, toolbox.Genes)
