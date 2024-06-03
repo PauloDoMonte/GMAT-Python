@@ -31,6 +31,7 @@ def normalizar_dados():
 		df3 = pd.read_csv("dados2.txt")
 		df4 = pd.read_csv("dados3.txt")
 		df = pd.concat([df1,df2,df3,df4])
+		df = df.dropna()
 		print(f"Dataset Carregado com {len(df)} dados\tDemorou: {time.time()-antes} segundos")
 # 1845,93 dados/MB
 # Para ter 1 milhão = 541,72 MB | 10 Milhões = 5,41 GB
@@ -59,7 +60,7 @@ def normalizar_dados():
 def criar_modelo():
 
 
-	if os.path.exists(f'model_checkpoint.keras'):
+	if os.path.exists(f'model_checkpoint_tanh.keras'):
 		model = tf.keras.models.load_model('model_checkpoint.keras')
 		print("O modelo foi carregado do checkpoint.")
 
@@ -68,7 +69,7 @@ def criar_modelo():
 		r2_metric = keras.metrics.R2Score()
 
 		model = keras.Sequential([
-		layers.Dense(13, activation='relu', input_dim=13),
+		layers.Dense(13, activation='tanh', input_dim=13),
 		layers.Dense(65, activation='relu'),
 		layers.Dropout(0.2),
 		layers.Dense(65, activation='relu'),
@@ -79,7 +80,18 @@ def criar_modelo():
 		layers.Dropout(0.2),
 		layers.Dense(65, activation='relu'),
 		layers.Dropout(0.2),
-		layers.Dense(4, activation='relu')
+		layers.Dense(65, activation='relu'),
+		layers.Dropout(0.2),
+		layers.Dense(65, activation='relu'),
+		layers.Dropout(0.2),
+		layers.Dense(65, activation='relu'),
+		layers.Dropout(0.2),
+		layers.Dense(65, activation='relu'),
+		layers.Dropout(0.2),
+		layers.Dense(65, activation='relu'),
+		layers.Dropout(0.2),
+		
+		layers.Dense(4)
 		])
 
 		model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
@@ -103,7 +115,7 @@ def treinar():
 	current_epoch_callback = CurrentEpochCallback()
 	
 	checkpoint_callback = keras.callbacks.ModelCheckpoint(
-	filepath=f'model_checkpoint.keras',
+	filepath=f'model_checkpoint_tanh.keras',
 	save_weights_only=False,
 	save_best_only=True,
 	monitor='val_loss',
